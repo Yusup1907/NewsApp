@@ -1,20 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Platform, View, StyleSheet } from 'react-native';
+import Navigation from './navigation/Navigation';
+import WebComponent from './config/WebComponent'; // Ubah sesuai dengan path ke komponen web
+import MobileComponent from './config/MobileComponent'; // Ubah sesuai dengan path ke komponen mobile
 
-export default function App() {
+const App = () => {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {Platform.OS === 'web' ? <WebComponent /> : (Platform.OS === 'ios' || Platform.OS === 'android' ? <Navigation /> : <MobileComponent />)}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
+export default App;

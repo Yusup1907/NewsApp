@@ -1,32 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { WebView } from 'react-native-webview';
 import axios from 'axios';
 
-const NewsArticleScreen = ({ route }) => {
+const NewsArticleScreen = ({ route, navigation }) => {
   const [articles, setArticles] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const { newsSource } = route.params;
 
   useEffect(() => {
     fetchArticles();
-  }, []);
+  }, [page]);
 
   const fetchArticles = async () => {
     try {
+      setLoading(true);
       const response = await axios.get('https://newsapi.org/v2/everything', {
         params: {
           apiKey: 'e9a664adc6fb40de8ef12f7845b4577f',
           sources: newsSource.id,
+          page,
         },
       });
-      setArticles(response.data.articles);
+      setArticles(prevArticles => [...prevArticles, ...response.data.articles]);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching articles:', error);
+      setLoading(false);
     }
   };
 
   const handleArticlePress = (article) => {
-    // Navigasi ke layar WebViewScreen dengan artikel yang dipilih
+    navigation.navigate('WebView', { article });
+  };
+
+  const handleEndReached = () => {
+    if (!loading) {
+      setPage(page + 1);
+    }
   };
 
   return (
@@ -43,7 +54,11 @@ const NewsArticleScreen = ({ route }) => {
             <Text style={styles.articleTitle}>{item.title}</Text>
           </TouchableOpacity>
         )}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
       />
+      {loading && <Text>Loading more articles...</Text>}
+      {!loading && articles.length === 0 && <Text>No articles available.</Text>}
     </View>
   );
 };
