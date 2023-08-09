@@ -4,8 +4,6 @@
 1. [Introduction](#introduction)
 2. [Getting Started](#getting-started)
 3. [Running the App](#running-the-app)
-4. [Troubleshooting](#troubleshooting)
-5. [Additional Resources](#additional-resources)
 
 ## Introduction
 This documentation provides a step-by-step guide to develop and run a news app using Expo and `react-native-web`. The app will display news categories, sources, and articles from the NewsAPI.
